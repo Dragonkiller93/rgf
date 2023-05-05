@@ -1,7 +1,7 @@
 from sklearn import datasets
 from sklearn.utils.validation import check_random_state
 from sklearn.model_selection import StratifiedKFold, cross_val_score
-from rgf.sklearn import RGFClassifier
+from rgf.sklearn import RGFClassifier, FastRGFClassifier
 import pandas as pd
 import numpy
 
@@ -15,11 +15,11 @@ labels = labels[1:].astype('int')
 Xtrain = data.head(-3000)
 Ytrain = labels.head(-3000)
 Xtest = data.tail(3000)
-Ytest = labels.tail(3000)
-for leaf in range(10):
-    l2term = 1/((10**(leaf//2)))*(0.5**(leaf%2))
-    clf = RGFClassifier(l2 = l2term)
+Ytest = labels.tail(3000)       
+for var in range(10):
+    param = (10*10**((var+1)//4))+250*(var%4)
+    clf = FastRGFClassifier(n_estimators= param)
     clf.fit(Xtrain,Ytrain)
     score = clf.score(Xtest,Ytest)
-    print("L2 regularization term: " + str(l2term) + ". Score: " + str(score))
+    print("Number of Trees: " + str(param) + ". Score: " + str(score))
 
